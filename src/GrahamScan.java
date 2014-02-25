@@ -101,7 +101,7 @@ public class GrahamScan {
     // test client
     public static void main(String[] args) {
         
-     	int[] Nvalues = {20,50,100,200,500,100,2000,3000};
+     	int[] Nvalues = {20,50,100,200,500,1000,2000,3000};
         //  int[] Nvalues = {5};
      	for (int k =0; k< Nvalues.length; k++)
      	{
