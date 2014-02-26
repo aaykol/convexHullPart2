@@ -16,20 +16,18 @@ import java.util.*;
 
 public class GrahamScan {
     private Stack<Point2D> hull = new Stack<Point2D>();
+  //  private Stack<Point2D> PointsSet = new Stack<Point2D>();
 
     public static int num_iter_n;
     
-    public GrahamScan(Point2D[] pts) {
+    public GrahamScan(ArrayList<Point2D> pts) {
 
-    	//ititizlie **********
-    	num_iter_n = 0;
-    	
         // defensive copy
-        int N = pts.length;
+        int N = pts.size();
         Point2D[] points = new Point2D[N];
         for (int i = 0; i < N; i++)
-            points[i] = pts[i];
-
+            points[i] = pts.get(i);
+        
         // preprocess so that points[0] has lowest y-coordinate; break ties by x-coordinate
         // points[0] is an extreme point of the convex hull
         // (alternatively, could do easily in linear time)
@@ -56,13 +54,13 @@ public class GrahamScan {
         // Graham scan; note that points[N-1] is extreme point different from points[0]
         for (int i = k2; i < N; i++) {
         	
-        	num_iter_n++;
+        	//num_iter_n++;
         	
             Point2D top = hull.pop();
             
             while (Point2D.ccw(hull.peek(), top, points[i]) <= 0) {
                 top = hull.pop();
-                num_iter_n++;
+               // num_iter_n++;
             }
             
             hull.push(top);
@@ -100,9 +98,13 @@ public class GrahamScan {
 
     // test client
     public static void main(String[] args) {
+    	
+    	//ititizlie **********
+    	num_iter_n = 0;
+    	
         
-     	int[] Nvalues = {20,50,100,200,500,1000,2000,3000};
-        //  int[] Nvalues = {5};
+     	//int[] Nvalues = {20,50,100,200,500,1000,2000,3000};
+         int[] Nvalues = {10};
      	for (int k =0; k< Nvalues.length; k++)
      	{
 	     		
@@ -110,30 +112,83 @@ public class GrahamScan {
 	        int N = Nvalues[k];
 	     	System.out.println("The value of N is: "+ N);
 	     	
-	     	Point2D[] points = new Point2D[N];
+	     	//Point2D[] points = new Point2D[N];
+	     	ArrayList<Point2D> points2 = new ArrayList<Point2D>();
+	     	
 	        
 	     	for (int i = 0; i < N; i++) {			// for each point it has a x an y coordinate 
 	            //int x = StdIn.readInt();
-	            //int y = StdIn.readInt();
-	        	int x = randomcoordinate();
-	            int y = randomcoordinate();
-	        	points[i] = new Point2D(x, y);		// add the point to Point2D
+	           // int y = StdIn.readInt();
+	        	float x = randomcoordinate();
+	            float y = randomcoordinate();
+	        	points2.add(new Point2D(x, y));		// add the point to Point2D
+	        	System.out.println(x*100+","+ y*100);
 	        }
-	        GrahamScan graham = new GrahamScan(points);			//give GrahamScan the list of points 
+	     	
+	     	/*While points not empty
+	     	 *  run graphham scan on the points 
+	     	 *  increment the counter 
+	     	 *  delete points from the points array the same points in graham array
+	     	 */
+	     	
+	     	 while(points2.size() != 0)
+	     	 {
+	     		GrahamScan graham = new GrahamScan(points2);			//give GrahamScan the list of points 
+	   
+	     		int count = 0;	
+	     		for (Point2D p : graham.hull())
+	     		{
+	     	       
+	     			for(int h = 0; h < points2.size(); h++)
+	     			{
+	     			
+	     				if(p.equals( points2.get(h)))
+	     				{
+	     				    points2.remove(h);	
+	     				}	
+	     					     				
+	     			}
+	  		
+	     		}
+	     		/*
+	     		count = points.length - count; 
+	     		for(int h = 0; h < points.length; h++)
+     			{
+	     			if(points[h].equals( new Point2D(-1, -1)))
+	     			{
+	     				if(count == 0)
+	     				{
+	     					count =1;
+	     				}
+	     				points2[--count] = points[h];
+     			
+	     			}
+     			}*/
+	     		
+	     		
+	     		num_iter_n++;
+	     		
+	     		//points = points2;
+	     			     		
+	     	 }
+	     	
+	     	
+	       // GrahamScan graham = new GrahamScan(points);			//give GrahamScan the list of points 
+	       // System.out.println("The following are the convexhull points:");
 	        //for (Point2D p : graham.hull())
-	           // StdOut.println(p);			// print out the convexhull coordinates
+	         //   StdOut.println(p);			// print out the convexhull coordinates
 	        System.out.println("The total number of iterations:"+ num_iter_n);
-	        //StdOut.println(num_iter_n);
+	        StdOut.println(num_iter_n);
      	}
     
     }
     
     
     
-    public static int randomcoordinate()
+    public static float randomcoordinate()
     {
     	Random generator = new Random();
-    	int r = generator.nextInt();
+    	float r = generator.nextFloat();
     	//System.out.println("The value of r is: "+ r);
     	return r;
     }
