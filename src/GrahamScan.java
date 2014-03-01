@@ -10,6 +10,7 @@
  *
  *************************************************************************/
 
+import java.lang.Object;
 import java.util.Arrays;
 import java.util.Stack;
 import java.util.*;
@@ -101,20 +102,32 @@ public class GrahamScan {
     	
     	//ititizlie **********
     	num_iter_n = 0;
+    	int time_counter = 0;
+    	long time_start = 0, time_stop = 0, total_exe_time, start_time_program, end_time_program, exe_time_program;
     	
-        
-     	//int[] Nvalues = {20,50,100,200,500,1000,2000,3000};
-         int[] Nvalues = {10};
+    	start_time_program = System.currentTimeMillis();
+    	
+    	
+    	double avg_iterations, avg_exe_time;
+    
+     	int[] Nvalues = {20,50,100,200,500,1000,2000,3000};
+        //int[] Nvalues = {10};
+     	
+     	long[] exe_time = new long[Nvalues.length];
+     	
      	for (int k =0; k< Nvalues.length; k++)
      	{
-	     		
+     		total_exe_time = 0;
+     		avg_iterations = 0.0;
+	     for (int m = 0; m < 250; m++){	
 	    	//int N = StdIn.readInt();				//number of points in the graph
 	        int N = Nvalues[k];
-	     	System.out.println("The value of N is: "+ N);
+	     	//System.out.println("The value of N is: "+ N);
 	     	
 	     	//Point2D[] points = new Point2D[N];
 	     	ArrayList<Point2D> points2 = new ArrayList<Point2D>();
 	     	
+	     	time_start = System.currentTimeMillis();
 	        
 	     	for (int i = 0; i < N; i++) {			// for each point it has a x an y coordinate 
 	            //int x = StdIn.readInt();
@@ -122,7 +135,7 @@ public class GrahamScan {
 	        	float x = randomcoordinate();
 	            float y = randomcoordinate();
 	        	points2.add(new Point2D(x, y));		// add the point to Point2D
-	        	System.out.println(x*100+","+ y*100);
+	        	//System.out.println(x*100+","+ y*100);
 	        }
 	     	
 	     	/*While points not empty
@@ -150,37 +163,31 @@ public class GrahamScan {
 	     			}
 	  		
 	     		}
-	     		/*
-	     		count = points.length - count; 
-	     		for(int h = 0; h < points.length; h++)
-     			{
-	     			if(points[h].equals( new Point2D(-1, -1)))
-	     			{
-	     				if(count == 0)
-	     				{
-	     					count =1;
-	     				}
-	     				points2[--count] = points[h];
-     			
-	     			}
-     			}*/
-	     		
-	     		
-	     		num_iter_n++;
-	     		
-	     		//points = points2;
-	     			     		
+	     	
+	     		num_iter_n++; 		
 	     	 }
-	     	
-	     	
+	     	time_stop = System.currentTimeMillis();
+     		exe_time[time_counter] = time_stop - time_start;
+     		avg_iterations += (double) num_iter_n;
+     		total_exe_time +=exe_time[time_counter];
+     		num_iter_n = 0;
+	     	}
+	     	avg_iterations = (double) avg_iterations / 250;
+	     	avg_exe_time = (double) total_exe_time / 250;
+	     	time_counter++;
 	       // GrahamScan graham = new GrahamScan(points);			//give GrahamScan the list of points 
 	       // System.out.println("The following are the convexhull points:");
 	        //for (Point2D p : graham.hull())
 	         //   StdOut.println(p);			// print out the convexhull coordinates
-	        System.out.println("The total number of iterations:"+ num_iter_n);
-	        StdOut.println(num_iter_n);
+	     	//System.out.println("The number of points: "+Nvalues[time_counter]);
+	        System.out.format("The total avg number of iterations: %f\n",(float) avg_iterations);
+	        //StdOut.println(num_iter_n);
+	        System.out.format("Total avg execution time: %f\n",(float) avg_exe_time);
      	}
-    
+     	
+     	end_time_program = System.currentTimeMillis();
+     	exe_time_program = end_time_program - start_time_program;
+     	System.out.format("Program execution time: %f\n",(float) exe_time_program);
     }
     
     
